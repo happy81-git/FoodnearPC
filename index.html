@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PokeBite — Food Around Me</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   POKEBITE — FOOD AROUND ME
+   A personal, monster-catching-adventure-styled food directory
+   for spots within 2km of Parc Clematis, Clementi, Singapore.
+   All Pokémon references below are original / inspired-by only.
+   ============================================================ */
+
+:root{
+  --green-primary:#2E7D32;
+  --green-dark:#1B5E20;
+  --green-bright:#66BB6A;
+  --yellow:#FFD54F;
+  --yellow-deep:#F5A623;
+  --cream:#FFF8E1;
+  --red:#EF5350;
+  --blue:#42A5F5;
+  --navy:#172033;
+  --white:#FFFFFF;
+  --ink:#1F2A1E;
+  --card-shadow: 0 4px 0 rgba(23,32,51,0.18), 0 10px 18px rgba(23,32,51,0.10);
+  --radius-lg:20px;
+  --radius-md:14px;
+  --radius-sm:9px;
+}
+
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  font-family:'Nunito', sans-serif;
+  color:var(--ink);
+  background:
+    radial-gradient(circle at 10% 0%, #EFF9E8 0%, transparent 45%),
+    radial-gradient(circle at 90% 10%, #E4F3FF 0%, transparent 40%),
+    var(--cream);
+  min-height:100vh;
+  line-height:1.5;
+}
+h1,h2,h3,h4{font-family:'Fredoka', 'Nunito', sans-serif; margin:0;}
+button{font-family:inherit;}
+a{color:inherit;}
+img{max-width:100%; display:block;}
+
+.wrap{max-width:1280px; margin:0 auto; padding:0 20px;}
+
+/* focus visibility */
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible{
+  outline:3px solid var(--blue);
+  outline-offset:2px;
+}
+
+/* ---------- decorative pixel border helper ---------- */
+.pixel-edge{
+  box-shadow:
+    0 0 0 2px var(--navy),
+    0 0 0 5px var(--white),
+    0 0 0 7px var(--navy);
+}
+
+/* ============ HEADER ============ */
+.site-header{
+  background: linear-gradient(180deg, var(--green-primary) 0%, var(--green-dark) 100%);
+  color:var(--white);
+  padding:18px 0 22px;
+  border-bottom:6px solid var(--navy);
+  position:relative;
+  overflow:hidden;
+}
+.site-header::after{
+  content:"";
+  position:absolute; inset:0;
+  background-image: radial-gradient(rgba(255,255,255,0.10) 2px, transparent 2px);
+  background-size: 18px 18px;
+  pointer-events:none;
+  opacity:0.5;
+}
+.header-inner{position:relative; z-index:1; display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:16px;}
+.brand{display:flex; align-items:center; gap:12px;}
+.brand-mark{
+  width:52px; height:52px; border-radius:50%;
+  background: conic-gradient(from 180deg, var(--red) 0 50%, var(--white) 50% 100%);
+  border:3px solid var(--navy);
+  position:relative;
+  flex-shrink:0;
+}
+.brand-mark::after{
+  content:"";
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  width:16px; height:16px; border-radius:50%;
+  background:var(--white); border:3px solid var(--navy);
+}
+.brand-mark::before{
+  content:"";
+  position:absolute; left:0; right:0; top:calc(50% - 2px);
+  height:4px; background:var(--navy);
+}
+.brand-text .logo{font-size:1.7rem; font-weight:700; letter-spacing:0.5px; line-height:1;}
+.brand-text .tagline{font-size:0.95rem; font-weight:600; opacity:0.92; margin-top:2px;}
+.brand-text .subline{font-size:0.82rem; opacity:0.8; margin-top:2px;}
+
+.status-bar{
+  display:flex; flex-wrap:wrap; gap:10px;
+}
+.status-chip{
+  background:rgba(255,255,255,0.14);
+  border:2px solid rgba(255,255,255,0.35);
+  border-radius:999px;
+  padding:7px 14px;
+  font-size:0.82rem;
+  font-weight:700;
+  display:flex; align-items:center; gap:6px;
+  white-space:nowrap;
+}
+.status-chip strong{font-weight:800;}
+
+/* ============ HERO ============ */
+.hero{
+  padding:34px 0 26px;
+  text-align:left;
+}
+.hero h1{
+  font-size:clamp(1.7rem, 3.4vw, 2.6rem);
+  color:var(--green-dark);
+  max-width:16ch;
+}
+.hero p.sub{
+  margin-top:8px;
+  font-size:1.05rem;
+  color:#3A4A38;
+  max-width:52ch;
+}
+.search-row{
+  margin-top:20px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.search-field{
+  flex:1 1 320px;
+  position:relative;
+}
+.search-field input{
+  width:100%;
+  padding:14px 16px 14px 44px;
+  border-radius:999px;
+  border:3px solid var(--navy);
+  font-size:1rem;
+  font-family:inherit;
+  background:var(--white);
+  color:var(--ink);
+}
+.search-field .icon{
+  position:absolute; left:16px; top:50%; transform:translateY(-50%);
+  font-size:1.1rem;
+  pointer-events:none;
+}
+.fav-toggle-btn{
+  border-radius:999px;
+  border:3px solid var(--navy);
+  background:var(--white);
+  padding:12px 20px;
+  font-weight:800;
+  cursor:pointer;
+  white-space:nowrap;
+  transition:transform 0.08s ease, background 0.15s ease;
+}
+.fav-toggle-btn:hover{background:var(--yellow);}
+.fav-toggle-btn:active{transform:translateY(2px);}
+.fav-toggle-btn.active{background:var(--red); color:var(--white); border-color:var(--navy);}
+
+.chip-row{
+  margin-top:14px;
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  padding-bottom:6px;
+  -ms-overflow-style:none;
+  scrollbar-width:thin;
+}
+.chip{
+  flex:0 0 auto;
+  background:var(--white);
+  border:2px solid var(--green-primary);
+  color:var(--green-dark);
+  border-radius:999px;
+  padding:8px 14px;
+  font-weight:700;
+  font-size:0.88rem;
+  cursor:pointer;
+  transition:all 0.12s ease;
+}
+.chip:hover{background:#EAF6E9;}
+.chip.active{background:var(--green-primary); color:var(--white); border-color:var(--green-dark);}
+
+/* ============ GAMIFICATION STRIP ============ */
+.explorer-strip{
+  margin-top:22px;
+  background:var(--white);
+  border:3px solid var(--navy);
+  border-radius:var(--radius-md);
+  padding:14px 18px;
+  box-shadow:var(--card-shadow);
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:16px;
+}
+.explorer-strip .lvl{
+  font-weight:800;
+  color:var(--green-dark);
+  white-space:nowrap;
+  font-size:0.95rem;
+}
+.progress-track{
+  flex:1 1 180px;
+  height:14px;
+  background:#EDE7D6;
+  border:2px solid var(--navy);
+  border-radius:999px;
+  overflow:hidden;
+  min-width:120px;
+}
+.progress-fill{
+  height:100%;
+  background:linear-gradient(90deg, var(--yellow), var(--yellow-deep));
+  transition:width 0.4s ease;
+}
+.explorer-strip .count-text{font-size:0.85rem; font-weight:700; color:#5B6B58; white-space:nowrap;}
+
+/* ============ MAIN LAYOUT ============ */
+main{padding:26px 0 60px;}
+.layout{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap:24px;
+}
+@media(min-width:980px){
+  .layout{grid-template-columns: 420px 1fr; align-items:start;}
+}
+
+/* ---------- MAP PANEL ---------- */
+.map-panel{
+  background:var(--white);
+  border:3px solid var(--navy);
+  border-radius:var(--radius-lg);
+  box-shadow:var(--card-shadow);
+  overflow:hidden;
+  position: sticky;
+  top:14px;
+}
+.map-panel-head{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 16px;
+  background:var(--cream);
+  border-bottom:3px solid var(--navy);
+}
+.map-panel-head h2{font-size:1rem; color:var(--green-dark);}
+.map-zoom{display:flex; gap:6px;}
+.map-zoom button{
+  width:30px; height:30px;
+  border-radius:8px;
+  border:2px solid var(--navy);
+  background:var(--white);
+  font-weight:800;
+  cursor:pointer;
+  line-height:1;
+}
+.map-zoom button:hover{background:var(--yellow);}
+.map-stage-outer{
+  background:
+    linear-gradient(160deg, #CFEFD1 0%, #BFE9E0 55%, #C7E6F2 100%);
+  position:relative;
+  aspect-ratio: 4 / 3.4;
+  overflow:hidden;
+}
+.map-stage{
+  position:absolute; inset:0;
+  transition: transform 0.25s ease;
+  transform-origin: 50% 50%;
+}
+.map-grid-line{stroke:rgba(23,32,51,0.10); stroke-width:1;}
+.radius-ring{
+  fill:rgba(102,187,106,0.12);
+  stroke:var(--green-primary);
+  stroke-width:2;
+  stroke-dasharray:6 5;
+}
+.home-pin-glow{fill:rgba(239,83,80,0.18);}
+.home-pin{
+  fill:var(--red); stroke:var(--navy); stroke-width:2;
+}
+.restaurant-pin{
+  cursor:pointer;
+}
+.restaurant-pin circle{
+  fill:var(--white); stroke:var(--green-dark); stroke-width:2;
+  transition: r 0.12s ease, fill 0.12s ease;
+}
+.restaurant-pin:hover circle, .restaurant-pin:focus circle{
+  fill:var(--yellow);
+}
+.restaurant-pin text{
+  font-size:9px; font-weight:800; fill:var(--navy);
+}
+.map-legend{
+  position:absolute; left:10px; bottom:10px;
+  background:rgba(255,255,255,0.92);
+  border:2px solid var(--navy);
+  border-radius:10px;
+  padding:8px 10px;
+  font-size:0.72rem;
+  font-weight:700;
+  display:flex; flex-direction:column; gap:4px;
+}
+.map-legend span{display:flex; align-items:center; gap:6px;}
+.legend-dot{width:10px; height:10px; border-radius:50%; display:inline-block; border:2px solid var(--navy);}
+.map-panel-foot{
+  padding:10px 16px;
+  font-size:0.78rem;
+  color:#5B6B58;
+  background:var(--cream);
+  border-top:2px solid rgba(23,32,51,0.15);
+}
+
+/* ---------- FILTER BAR ---------- */
+.filter-panel{
+  background:var(--white);
+  border:3px solid var(--navy);
+  border-radius:var(--radius-lg);
+  box-shadow:var(--card-shadow);
+  padding:16px 18px;
+  margin-bottom:20px;
+}
+.filter-grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px,1fr));
+  gap:14px;
+}
+.filter-group label{
+  display:block;
+  font-size:0.75rem;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:0.03em;
+  color:var(--green-dark);
+  margin-bottom:5px;
+}
+.filter-group select{
+  width:100%;
+  padding:9px 10px;
+  border-radius:var(--radius-sm);
+  border:2px solid var(--navy);
+  font-family:inherit;
+  font-size:0.9rem;
+  background:var(--white);
+}
+.budget-btns{display:flex; gap:6px; flex-wrap:wrap;}
+.budget-btns button{
+  border:2px solid var(--navy);
+  background:var(--white);
+  border-radius:var(--radius-sm);
+  padding:7px 10px;
+  font-weight:800;
+  cursor:pointer;
+  font-size:0.85rem;
+}
+.budget-btns button.active{background:var(--yellow);}
+.filter-foot{
+  display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;
+  margin-top:14px; padding-top:12px; border-top:2px dashed rgba(23,32,51,0.2);
+}
+.reset-btn{
+  border:2px solid var(--navy);
+  background:var(--white);
+  border-radius:999px;
+  padding:8px 16px;
+  font-weight:800;
+  cursor:pointer;
+}
+.reset-btn:hover{background:#FCE4E4;}
+.result-count{font-weight:800; color:var(--green-dark); font-size:0.95rem;}
+
+.sort-row{display:flex; align-items:center; gap:8px; font-weight:700; font-size:0.88rem;}
+.sort-row select{
+  padding:7px 10px; border-radius:var(--radius-sm); border:2px solid var(--navy); font-family:inherit; background:var(--white);
+}
+
+/* ---------- DIRECTORY / CARDS ---------- */
+.directory-head{
+  display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;
+  margin-bottom:14px;
+}
+.data-badge{
+  display:inline-flex; align-items:center; gap:6px;
+  background:#FFF3CD; border:2px solid var(--yellow-deep);
+  color:#7A5A00; font-weight:800; font-size:0.72rem;
+  padding:5px 10px; border-radius:999px;
+}
+
+.card-grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap:18px;
+}
+
+.rcard{
+  background:var(--white);
+  border:3px solid var(--navy);
+  border-radius:var(--radius-lg);
+  box-shadow:var(--card-shadow);
+  display:flex; flex-direction:column;
+  overflow:hidden;
+  transition:transform 0.12s ease, box-shadow 0.12s ease;
+}
+.rcard:hover{ transform:translateY(-3px); }
+.rcard-media{
+  position:relative;
+  height:108px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:2.6rem;
+  background: linear-gradient(135deg, var(--green-bright), var(--blue));
+  border-bottom:3px solid var(--navy);
+}
+.rcard-media .emoji{filter:drop-shadow(0 3px 0 rgba(0,0,0,0.15));}
+.dist-badge{
+  position:absolute; top:8px; right:8px;
+  background:var(--navy); color:var(--white);
+  font-weight:800; font-size:0.75rem;
+  padding:5px 10px; border-radius:999px;
+  border:2px solid var(--white);
+}
+.badge-row{
+  position:absolute; top:8px; left:8px;
+  display:flex; gap:5px; flex-wrap:wrap; max-width:70%;
+}
+.tag-badge{
+  background:var(--white);
+  border:2px solid var(--navy);
+  border-radius:999px;
+  font-size:0.66rem;
+  font-weight:800;
+  padding:3px 7px;
+  white-space:nowrap;
+}
+.rcard-body{padding:14px 14px 6px; flex:1; display:flex; flex-direction:column; gap:6px;}
+.rcard-body h3{font-size:1.08rem; color:var(--green-dark);}
+.rcard-meta{font-size:0.82rem; font-weight:700; color:#5B6B58;}
+.rcard-stats{display:flex; align-items:center; gap:10px; font-size:0.85rem; font-weight:800;}
+.rcard-stats .rating.unavailable{color:#9AA396; font-weight:700; font-style:italic;}
+.rcard-desc{font-size:0.87rem; color:#3A4A38; margin-top:2px;}
+.rcard-addr{font-size:0.8rem; color:#5B6B58; margin-top:2px;}
+
+.rcard-actions{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:7px;
+  padding:12px 14px 14px;
+}
+.act-btn{
+  border:2px solid var(--navy);
+  border-radius:var(--radius-sm);
+  padding:9px 8px;
+  font-weight:800;
+  font-size:0.78rem;
+  cursor:pointer;
+  text-align:center;
+  text-decoration:none;
+  display:block;
+  transition:transform 0.08s ease, filter 0.1s ease;
+  background:var(--white);
+}
+.act-btn:active{transform:translateY(2px);}
+.act-btn.maps{background:var(--blue); color:var(--white);}
+.act-btn.grab{background:#00B14F; color:var(--white);}
+.act-btn.panda{background:#FF6A00; color:var(--white);}
+.act-btn.disabled{background:#EDEDED; color:#8A8A8A; cursor:not-allowed; border-color:#C9C9C9;}
+.act-btn.fav{background:var(--white); grid-column: span 2;}
+.act-btn.fav.is-fav{background:var(--red); color:var(--white);}
+
+/* ---------- EMPTY / SKELETON ---------- */
+.empty-state{
+  grid-column:1/-1;
+  text-align:center;
+  background:var(--white);
+  border:3px dashed var(--navy);
+  border-radius:var(--radius-lg);
+  padding:44px 20px;
+}
+.empty-state .big{font-size:2.4rem;}
+.empty-state h3{margin-top:8px; color:var(--green-dark);}
+.empty-state p{color:#5B6B58; max-width:38ch; margin:6px auto 0;}
+
+.skeleton-card{
+  background:var(--white);
+  border:3px solid var(--navy);
+  border-radius:var(--radius-lg);
+  overflow:hidden;
+}
+.skeleton-media{height:108px; background:linear-gradient(100deg,#eee 30%,#f6f6f6 50%,#eee 70%); background-size:200% 100%; animation:shimmer 1.3s infinite;}
+.skeleton-line{height:12px; margin:10px 14px; border-radius:6px; background:linear-gradient(100deg,#eee 30%,#f6f6f6 50%,#eee 70%); background-size:200% 100%; animation:shimmer 1.3s infinite;}
+@keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+
+/* ---------- FOOTER ---------- */
+.site-footer{
+  background:var(--navy);
+  color:#CFE0D6;
+  padding:26px 0;
+  font-size:0.85rem;
+}
+.site-footer a{color:var(--yellow); font-weight:700;}
+.site-footer .cols{display:flex; flex-wrap:wrap; gap:20px; justify-content:space-between;}
+
+/* ---------- WHATSAPP FAB ---------- */
+.wa-fab{
+  position:fixed;
+  right:18px; bottom:18px;
+  z-index:40;
+  display:flex; align-items:center; gap:8px;
+  background:#25D366;
+  color:var(--white);
+  border:3px solid var(--navy);
+  border-radius:999px;
+  padding:12px 16px;
+  font-weight:800;
+  font-size:0.85rem;
+  text-decoration:none;
+  box-shadow:0 6px 0 rgba(23,32,51,0.25), 0 10px 18px rgba(0,0,0,0.18);
+  transition:transform 0.1s ease;
+}
+.wa-fab:hover{transform:translateY(-2px);}
+.wa-fab:active{transform:translateY(2px); box-shadow:0 2px 0 rgba(23,32,51,0.25);}
+.wa-fab .wa-icon{font-size:1.1rem;}
+
+@media(max-width:640px){
+  .wa-fab span.wa-label{display:none;}
+  .wa-fab{padding:14px; border-radius:50%;}
+}
+
+.visually-hidden{
+  position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden;
+  clip:rect(0,0,0,0); white-space:nowrap; border:0;
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header class="site-header">
+  <div class="wrap header-inner">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true"></div>
+      <div class="brand-text">
+        <div class="logo">🍙 PokeBite</div>
+        <div class="tagline">Catch your next meal.</div>
+        <div class="subline">Food adventures within 2&nbsp;km of Parc Clematis</div>
+      </div>
+    </div>
+    <div class="status-bar" id="statusBar" aria-label="App status">
+      <span class="status-chip">📍 <strong>Home Base:</strong>&nbsp;Parc Clematis</span>
+      <span class="status-chip">🔵 <strong>Radius:</strong>&nbsp;2 km</span>
+      <span class="status-chip">🍴 <strong id="statFoodCount">--</strong>&nbsp;spots found</span>
+      <span class="status-chip">💰 <strong id="statBudget">All</strong></span>
+    </div>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="wrap hero">
+  <h1>What are you hungry for?</h1>
+  <p class="sub">Explore food spots within 2&nbsp;km of home — sorted, filtered, and ready to catch.</p>
+
+  <div class="search-row">
+    <div class="search-field">
+      <span class="icon" aria-hidden="true">🔎</span>
+      <label for="searchInput" class="visually-hidden">Search for food, cuisine or restaurant</label>
+      <input id="searchInput" type="search" placeholder="Search for food, cuisine or restaurant…" autocomplete="off">
+    </div>
+    <button class="fav-toggle-btn" id="favToggleBtn" type="button" aria-pressed="false">♡ Show favourites</button>
+  </div>
+
+  <div class="chip-row" role="group" aria-label="Quick cuisine filters" id="chipRow">
+    <button class="chip" data-chip-tag="noodles">🍜 Noodles</button>
+    <button class="chip" data-chip-tag="japanese">🍣 Japanese</button>
+    <button class="chip" data-chip-tag="burgers">🍔 Burgers</button>
+    <button class="chip" data-chip-tag="rice">🍚 Rice</button>
+    <button class="chip" data-chip-tag="cafe">☕ Cafe</button>
+    <button class="chip" data-chip-tag="dessert">🍰 Dessert</button>
+    <button class="chip" data-chip-tag="spicy">🌶 Spicy</button>
+  </div>
+
+  <div class="explorer-strip">
+    <div class="lvl">⭐ Food Explorer <span id="explorerLevel">Level 1</span></div>
+    <div class="progress-track"><div class="progress-fill" id="explorerProgress" style="width:0%"></div></div>
+    <div class="count-text"><span id="discoveredCount">0</span> food spots discovered</div>
+  </div>
+</section>
+
+<!-- ============ MAIN ============ -->
+<main class="wrap">
+  <div class="layout">
+
+    <!-- ---------- MAP ---------- -->
+    <section class="map-panel" aria-label="Map of food spots near Parc Clematis">
+      <div class="map-panel-head">
+        <h2>🗺 Food Radar</h2>
+        <div class="map-zoom">
+          <button type="button" id="zoomOut" aria-label="Zoom out">−</button>
+          <button type="button" id="zoomIn" aria-label="Zoom in">+</button>
+        </div>
+      </div>
+      <div class="map-stage-outer">
+        <svg class="map-stage" id="mapSvg" viewBox="0 0 400 340" role="img" aria-label="Illustrated map showing Parc Clematis at the centre with a 2 kilometre search ring and nearby food spot markers">
+          <!-- grid -->
+          <g id="mapGrid"></g>
+          <!-- radius ring -->
+          <circle class="radius-ring" cx="200" cy="170" r="150"></circle>
+          <!-- home glow + pin -->
+          <circle class="home-pin-glow" cx="200" cy="170" r="22"></circle>
+          <g id="homePinGroup">
+            <circle class="home-pin" cx="200" cy="170" r="9"></circle>
+            <text x="200" y="195" text-anchor="middle" font-size="10" font-weight="800" fill="#172033">🏠 HOME BASE</text>
+          </g>
+          <!-- restaurant pins injected by JS -->
+          <g id="pinLayer"></g>
+        </svg>
+        <div class="map-legend" aria-hidden="true">
+          <span><span class="legend-dot" style="background:var(--red);"></span>Parc Clematis</span>
+          <span><span class="legend-dot" style="background:var(--white);"></span>Food spot</span>
+          <span><span class="legend-dot" style="background:transparent;border-style:dashed;"></span>2 km zone</span>
+        </div>
+      </div>
+      <div class="map-panel-foot">
+        Illustrated map for orientation only — not to exact scale. Connect Google Maps / Mapbox / OpenStreetMap for a live tile map (see code comments).
+      </div>
+    </section>
+
+    <!-- ---------- DIRECTORY ---------- -->
+    <section aria-label="Food directory">
+
+      <div class="filter-panel">
+        <div class="filter-grid">
+          <div class="filter-group">
+            <label id="budgetLabel">Budget</label>
+            <div class="budget-btns" role="group" aria-labelledby="budgetLabel" id="budgetBtns">
+              <button type="button" data-budget="all" class="active">All</button>
+              <button type="button" data-budget="$">$</button>
+              <button type="button" data-budget="$$">$$</button>
+              <button type="button" data-budget="$$$">$$$</button>
+              <button type="button" data-budget="$$$$">$$$$</button>
+            </div>
+          </div>
+          <div class="filter-group">
+            <label for="cuisineSelect">Cuisine</label>
+            <select id="cuisineSelect">
+              <option value="all">All</option>
+              <option value="Chinese">Chinese</option>
+              <option value="Japanese">Japanese</option>
+              <option value="Korean">Korean</option>
+              <option value="Indian">Indian</option>
+              <option value="Malay">Malay</option>
+              <option value="Western">Western</option>
+              <option value="Thai">Thai</option>
+              <option value="Fast Food">Fast Food</option>
+              <option value="Cafe">Cafe</option>
+              <option value="Hawker">Hawker</option>
+              <option value="Dessert">Dessert</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="distanceSelect">Distance</label>
+            <select id="distanceSelect">
+              <option value="2000">Within 2 km</option>
+              <option value="1500">Within 1.5 km</option>
+              <option value="1000">Within 1 km</option>
+              <option value="500">Within 500 m</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="ratingSelect">Rating</label>
+            <select id="ratingSelect">
+              <option value="0">Any</option>
+              <option value="4.0">4.0+</option>
+              <option value="4.5">4.5+</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="orderingSelect">Ordering</label>
+            <select id="orderingSelect">
+              <option value="all">All</option>
+              <option value="grab">GrabFood</option>
+              <option value="panda">foodpanda</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="sortSelect">Sort by</label>
+            <select id="sortSelect">
+              <option value="nearest">Nearest</option>
+              <option value="farthest">Farthest</option>
+              <option value="rating">Rating: High to Low</option>
+              <option value="budget">Budget: Low to High</option>
+              <option value="name">Name: A–Z</option>
+            </select>
+          </div>
+        </div>
+        <div class="filter-foot">
+          <span class="result-count" id="resultCount">Loading food spots…</span>
+          <button type="button" class="reset-btn" id="resetBtn">↺ Reset filters</button>
+        </div>
+      </div>
+
+      <div class="directory-head">
+        <h2 style="font-size:1.15rem;color:var(--green-dark);">Nearby food spots</h2>
+        <span class="data-badge" id="dataBadge">🧪 Demo data — connect a Places API for live results</span>
+      </div>
+
+      <div class="card-grid" id="cardGrid" aria-live="polite"></div>
+
+    </section>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap cols">
+    <div>
+      <strong>PokeBite</strong> — a personal food Pokédex for Parc Clematis, Clementi.<br>
+      Demo dataset. Ratings, review counts, opening hours and delivery availability are only shown when explicitly marked as known — nothing here is fabricated for real businesses.
+    </div>
+    <div>
+      Built with HTML, CSS &amp; vanilla JavaScript.<br>
+      Ready to connect a live Google Places / Overpass API — see source comments.
+    </div>
+  </div>
+</footer>
+
+<!-- ============ WHATSAPP CONTACT ============ -->
+<a class="wa-fab" href="https://wa.me/+6597862644" target="_blank" rel="noopener noreferrer" aria-label="Message on WhatsApp to suggest a food spot">
+  <span class="wa-icon" aria-hidden="true">💬</span>
+  <span class="wa-label">Suggest a spot on WhatsApp</span>
+</a>
+
+<script>
+/* ============================================================
+   POKEBITE — APPLICATION LOGIC
+   Sections: DATA → DISTANCE UTIL → UI LOGIC → FILTER LOGIC → INIT
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   0. REFERENCE LOCATION — Parc Clematis, 2–20 Jalan Lempeng
+   Approximate public geographic centre. No unit-level info used.
+------------------------------------------------------------ */
+const HOME = { lat: 1.3145, lng: 103.7625, label: "Parc Clematis" };
+const RADIUS_KM = 2;
+
+/* ------------------------------------------------------------
+   1. RESTAURANT DATA SOURCE
+   Replace DEMO_RESTAURANTS with live API data later, e.g.:
+     - Google Places API (Nearby Search / Text Search)
+     - Google Maps Platform
+     - OpenStreetMap / Overpass API (free, no key)
+     - Any other restaurant directory API
+   Keep the same field shape so the rest of the app needs no changes.
+   NEVER put a real API key in this frontend file — load it from
+   a backend/proxy instead. Placeholder shown below:
+     const PLACES_API_KEY = "YOUR_API_KEY_HERE";
+------------------------------------------------------------ */
+const DEMO_RESTAURANTS = [
+  {id:1, name:"Noodle Monster", cuisine:"Chinese", category:"Hand-pulled Noodles", latitude:1.3151, longitude:103.7631, address:"Block 442 Clementi Ave 3, #01-12", budget:"$$", rating:4.5, reviewCount:328, description:"Spicy handmade noodles and dumplings, wok-fried to order.", grabFoodUrl:"https://food.grab.com/sg/en/search", foodpandaUrl:null, tags:["noodles","chinese","dumplings","spicy"], emoji:"🍜"},
+  {id:2, name:"Ramen Ridgeback", cuisine:"Japanese", category:"Ramen", latitude:1.3138, longitude:103.7644, address:"321 Clementi Ave 5, #01-08", budget:"$$", rating:4.6, reviewCount:512, description:"Rich tonkotsu broth simmered for 18 hours, handmade noodles.", grabFoodUrl:"https://food.grab.com/sg/en/search", foodpandaUrl:"https://www.foodpanda.sg/", tags:["ramen","japanese","noodles"], emoji:"🍜"},
+  {id:3, name:"Kopi Kraken", cuisine:"Hawker", category:"Coffeeshop", latitude:1.3159, longitude:103.7609, address:"Clementi 448 Market & Food Centre, #01-45", budget:"$", rating:4.3, reviewCount:201, description:"Old-school kopitiam brew with kaya toast and soft-boiled eggs.", grabFoodUrl:null, foodpandaUrl:null, tags:["cafe","breakfast","local"], emoji:"☕"},
+  {id:4, name:"Curry Chomper", cuisine:"Indian", category:"North Indian", latitude:1.3126, longitude:103.7618, address:"3155 Commonwealth Ave West, #01-22", budget:"$$", rating:4.4, reviewCount:176, description:"Butter chicken, naan and a rotating thali of the day.", grabFoodUrl:"https://food.grab.com/sg/en/search", foodpandaUrl:"https://www.foodpanda.sg/", tags:["indian","curry","spicy"], emoji:"🍛"},
+  {id:5, name:"Sizzle Slug", cuisine:"Western", category:"Grill", latitude:1.3168, longitude:103.7639, address:"Clementi Mall, #03-19", budget:"$$$", rating:null, reviewCount:0, description:"Steaks and chops on a hot plate, with truffle fries on the side.", grabFoodUrl:null, foodpandaUrl:"https://www.foodpanda.sg/", tags:["western","grill","steak"], emoji:"🥩"},
+  {id:6, name:"Panda Bao Den", cuisine:"Chinese", category:"Dim Sum", latitude:1.3155, longitude:103.7597, address:"Block 328 Clementi Ave 2, #01-101", budget:"$$", rating:4.2, reviewCount:98, description:"Steamed bao and dim sum baskets, cart-style service on weekends.", grabFoodUrl:"https://food.grab.com/sg/en/search", foodpandaUrl:null, tags:["chinese","dimsum","bao"], emoji:"🥟"},
+  {id:7, name:"Sushi Snapjaw", cuisine:"Japanese", category:"Sushi", latitude:1.3129, longitude:103.7654, address:"321 Clementi Ave 5, #02-11", budget:"$$$", rating:4.7, reviewCount:284, description:"Nigiri and sashimi sets flown in twice weekly.", grabFoodUrl:null, foodpandaUrl:"https://www.foodpanda.sg/", tags:["japanese","sushi","seafood"], emoji:"🍣"},
+  {id:8, name:"Burger Beastling", cuisine:"Fast Food", category:"Burgers", latitude:1.3172, longitude:103.7601, address:"Clementi Mall, #01-05", budget:"$", rating:4.0, reviewCount:410, description:"Smash burgers with a crisp double-fried patty edge.", grabFoodUrl:"https://food.grab.com/sg/en/search", foodpandaUrl:"https://www.foodpanda.sg/", tags:["burgers","fastfood","fries"], emoji:"🍔"},
+  {id:9, name:"Tom Yum Tusker", cuisine:"Thai", category:"Thai Soup House", latitude:1.3117, longitude:103.7632, address:"321 Clementi Ave 5, #01-33", budget:"$$", rating:4.4, reviewCount:150, description:"Sour, spicy tom yum and basil fried rice, Bangkok-style.", grabFoodUrl:"https://food.grab.com/sg/en/search", foodpandaUrl:null, tags:["thai","spicy","soup"], emoji:"🌶"},
+  {id:10, name:"Nasi Lemak Larva", cuisine:"Malay", category:"Malay Classics", latitude:1.3163, longitude:103.7615, address:"Clementi 448 Market & Food Centre, #01-12", budget:"$", rating:4.6, reviewCount:602, description:"Coconut rice, crispy anchovies and sambal made fresh daily.", grabFoodUrl:null, foodpandaUrl:null, tags:["malay","rice","spicy","local"], emoji:"🍚"},
+  {id:11, name:"Kimchi Cub", cuisine:"Korean", category:"Korean BBQ", latitude:1.3134, longitude:103.7599, address:"3155 Commonwealth Ave West, #02-08", budget:"$$$", rating:4.5, reviewCount:220, description:"Tabletop grilling with a build-your-own banchan bar.", grabFoodUrl:"https://food.grab.com/sg/en/search", foodpandaUrl:"https://www.foodpanda.sg/", tags:["korean","bbq","grill"], emoji:"🍖"},
+  {id:12, name:"Dessert Dragonette", cuisine:"Dessert", category:"Ice Cream & Waffles", latitude:1.3149, longitude:103.7661, address:"321 Clementi Ave 5, #01-19", budget:"$", rating:4.3, reviewCount:340, description:"Charcoal waffles topped with a rotating flavour of gelato.", grabFoodUrl:"https://food.grab.com/sg/en/search", foodpandaUrl:"https://www.foodpanda.sg/", tags:["dessert","sweet","waffles"], emoji:"🍰"},
+  {id:13, name:"Wanton Wyrm", cuisine:"Chinese", category:"Wanton Noodles", latitude:1.3140, longitude:103.7607, address:"Block 328 Clementi Ave 2, #01-88", budget:"$", rating:null, reviewCount:0, description:"Springy egg noodles tossed in a family sauce recipe.", grabFoodUrl:null, foodpandaUrl:"https://www.foodpanda.sg/", tags:["noodles","chinese","wanton"], emoji:"🍜"},
+  {id:14, name:"Cafe Chikorita", cuisine:"Cafe", category:"Brunch Cafe", latitude:1.3176, longitude:103.7622, address:"Clementi Mall, #02-27", budget:"$$", rating:4.5, reviewCount:266, description:"All-day brunch, matcha lattes and a leafy plant-filled corner.", grabFoodUrl:"https://food.grab.com/sg/en/search", foodpandaUrl:"https://www.foodpanda.sg/", tags:["cafe","brunch","coffee"], emoji:"☕"},
+  {id:15, name:"Char Siew Charmander", cuisine:"Chinese", category:"Roast Meats", latitude:1.3121, longitude:103.7645, address:"3155 Commonwealth Ave West, #01-07", budget:"$", rating:4.4, reviewCount:189, description:"Char siew glazed over charcoal, served on fragrant rice.", grabFoodUrl:"https://food.grab.com/sg/en/search", foodpandaUrl:null, tags:["chinese","rice","roast"], emoji:"🍚"},
+  {id:16, name:"Prata Pupper", cuisine:"Indian", category:"Prata House", latitude:1.3182, longitude:103.7648, address:"Block 442 Clementi Ave 3, #01-33", budget:"$", rating:4.1, reviewCount:132, description:"24-flavour prata menu, best enjoyed with fish curry.", grabFoodUrl:null, foodpandaUrl:null, tags:["indian","prata","breakfast"], emoji:"🫓"},
+  {id:17, name:"Laksa Lapras", cuisine:"Hawker", category:"Laksa", latitude:1.3107, longitude:103.7615, address:"Clementi 448 Market & Food Centre, #01-22", budget:"$", rating:4.7, reviewCount:455, description:"Rich coconut laksa gravy with a generous ladle of cockles.", grabFoodUrl:"https://food.grab.com/sg/en/search", foodpandaUrl:"https://www.foodpanda.sg/", tags:["hawker","laksa","spicy","local"], emoji:"🍲"},
+  {id:18, name:"Pho Fennekin", cuisine:"Other", category:"Vietnamese Pho", latitude:1.3162, longitude:103.7665, address:"321 Clementi Ave 5, #01-41", budget:"$$", rating:null, reviewCount:0, description:"Slow-simmered beef broth pho, herbs served on the side.", grabFoodUrl:"https://food.grab.com/sg/en/search", foodpandaUrl:null, tags:["vietnamese","noodles","soup"], emoji:"🍜"},
+  {id:19, name:"Pizza Pidgeling", cuisine:"Western", category:"Pizza", latitude:1.3120, longitude:103.7592, address:"3155 Commonwealth Ave West, #01-15", budget:"$$", rating:4.2, reviewCount:167, description:"Thin-crust pizzas fired in a small wood oven.", grabFoodUrl:"https://food.grab.com/sg/en/search", foodpandaUrl:"https://www.foodpanda.sg/", tags:["western","pizza","cheese"], emoji:"🍕"},
+  {id:20, name:"Fried Rice Fuecoco", cuisine:"Chinese", category:"Zi Char", latitude:1.3145, longitude:103.7583, address:"Block 328 Clementi Ave 2, #01-55", budget:"$$", rating:4.3, reviewCount:143, description:"Wok-hei fried rice and a rotating zi char menu, group-friendly.", grabFoodUrl:null, foodpandaUrl:"https://www.foodpanda.sg/", tags:["chinese","rice","spicy"], emoji:"🍚"},
+  {id:21, name:"Bingsu Buneary", cuisine:"Dessert", category:"Korean Shaved Ice", latitude:1.3130, longitude:103.7671, address:"321 Clementi Ave 5, #02-03", budget:"$$", rating:4.6, reviewCount:120, description:"Snow-fine bingsu piled with red bean, mochi and fruit.", grabFoodUrl:"https://food.grab.com/sg/en/search", foodpandaUrl:null, tags:["dessert","korean","sweet"], emoji:"🍧"},
+  {id:22, name:"Chicken Rice Rattling", cuisine:"Hawker", category:"Chicken Rice", latitude:1.3170, longitude:103.7590, address:"Clementi 448 Market & Food Centre, #01-08", budget:"$", rating:4.5, reviewCount:389, description:"Poached chicken, fragrant rice, chilli made in-house daily.", grabFoodUrl:null, foodpandaUrl:null, tags:["hawker","rice","chicken","local"], emoji:"🍗"},
+  {id:23, name:"Spice Salazzle", cuisine:"Thai", category:"Thai Street Food", latitude:1.3191, longitude:103.7627, address:"Clementi Mall, #01-31", budget:"$$", rating:4.1, reviewCount:96, description:"Papaya salad and grilled skewers with a fiery house sauce.", grabFoodUrl:"https://food.grab.com/sg/en/search", foodpandaUrl:"https://www.foodpanda.sg/", tags:["thai","spicy","street food"], emoji:"🌶"},
+  {id:24, name:"Bagel Bulbadex", cuisine:"Cafe", category:"Bagels & Coffee", latitude:1.3108, longitude:103.7658, address:"3155 Commonwealth Ave West, #01-40", budget:"$", rating:null, reviewCount:0, description:"House-boiled bagels with a rotating spread of the week.", grabFoodUrl:"https://food.grab.com/sg/en/search", foodpandaUrl:"https://www.foodpanda.sg/", tags:["cafe","breakfast","bagel"], emoji:"🥯"}
+];
+
+/* ------------------------------------------------------------
+   2. DISTANCE UTILITY — Haversine formula
+------------------------------------------------------------ */
+function calculateDistance(lat1, lng1, lat2, lng2){
+  const R = 6371; // Earth radius in km
+  const dLat = (lat2 - lat1) * Math.PI/180;
+  const dLng = (lng2 - lng1) * Math.PI/180;
+  const a = Math.sin(dLat/2)**2 +
+            Math.cos(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) *
+            Math.sin(dLng/2)**2;
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  return R * c; // km
+}
+function formatDistance(km){
+  if (km < 1) return Math.round(km*1000) + " m away";
+  return km.toFixed(1) + " km away";
+}
+
+/* Attach a computed distanceKm to every demo entry, then drop
+   anything beyond the 2km radius (per spec, out-of-range = hidden). */
+const ALL_RESTAURANTS = DEMO_RESTAURANTS
+  .map(r => ({...r, distanceKm: calculateDistance(HOME.lat, HOME.lng, r.latitude, r.longitude)}))
+  .filter(r => r.distanceKm <= RADIUS_KM);
+
+/* Dynamic URL builders — never hard-code the same link twice */
+function buildGoogleMapsUrl(r){
+  const q = encodeURIComponent(`${r.name} ${r.address}`);
+  return `https://www.google.com/maps/search/?api=1&query=${q}`;
+}
+
+/* ------------------------------------------------------------
+   3. STATE
+------------------------------------------------------------ */
+const state = {
+  search: "",
+  budget: "all",
+  cuisine: "all",
+  distance: 2000,
+  rating: 0,
+  ordering: "all",
+  sort: "nearest",
+  activeChip: null,
+  showFavOnly: false,
+  favourites: new Set(JSON.parse(localStorage.getItem("pokebite_favourites") || "[]")),
+  discovered: new Set(JSON.parse(localStorage.getItem("pokebite_discovered") || "[]")),
+  zoom: 1
+};
+
+function saveFavourites(){ localStorage.setItem("pokebite_favourites", JSON.stringify([...state.favourites])); }
+function saveDiscovered(){ localStorage.setItem("pokebite_discovered", JSON.stringify([...state.discovered])); }
+
+/* ------------------------------------------------------------
+   4. FILTER + SORT LOGIC
+------------------------------------------------------------ */
+function getFilteredRestaurants(){
+  let list = ALL_RESTAURANTS.filter(r => r.distanceKm * 1000 <= state.distance);
+
+  if (state.budget !== "all") list = list.filter(r => r.budget === state.budget);
+  if (state.cuisine !== "all") list = list.filter(r => r.cuisine === state.cuisine);
+  if (state.rating > 0) list = list.filter(r => r.rating !== null && r.rating >= state.rating);
+  if (state.ordering === "grab") list = list.filter(r => !!r.grabFoodUrl);
+  if (state.ordering === "panda") list = list.filter(r => !!r.foodpandaUrl);
+  if (state.showFavOnly) list = list.filter(r => state.favourites.has(r.id));
+
+  if (state.activeChip) {
+    list = list.filter(r => r.tags.includes(state.activeChip));
+  }
+
+  if (state.search.trim()) {
+    const q = state.search.trim().toLowerCase();
+    list = list.filter(r =>
+      r.name.toLowerCase().includes(q) ||
+      r.cuisine.toLowerCase().includes(q) ||
+      r.category.toLowerCase().includes(q) ||
+      r.description.toLowerCase().includes(q) ||
+      r.address.toLowerCase().includes(q)
+    );
+  }
+
+  const budgetRank = {"$":1,"$$":2,"$$$":3,"$$$$":4};
+  switch(state.sort){
+    case "nearest": list = [...list].sort((a,b)=>a.distanceKm-b.distanceKm); break;
+    case "farthest": list = [...list].sort((a,b)=>b.distanceKm-a.distanceKm); break;
+    case "rating": list = [...list].sort((a,b)=>(b.rating||0)-(a.rating||0)); break;
+    case "budget": list = [...list].sort((a,b)=>budgetRank[a.budget]-budgetRank[b.budget]); break;
+    case "name": list = [...list].sort((a,b)=>a.name.localeCompare(b.name)); break;
+  }
+  return list;
+}
+
+/* ------------------------------------------------------------
+   5. RENDER — CARDS
+------------------------------------------------------------ */
+const cardGrid = document.getElementById("cardGrid");
+const resultCount = document.getElementById("resultCount");
+const statFoodCount = document.getElementById("statFoodCount");
+const statBudget = document.getElementById("statBudget");
+const dataBadge = document.getElementById("dataBadge");
+
+function badgesFor(r){
+  const badges = [];
+  if (r.rating && r.rating >= 4.5) badges.push("🌟 Popular");
+  if (r.tags.includes("spicy")) badges.push("🔥 Hot");
+  if (r.budget === "$") badges.push("💰 Budget Pick");
+  if (r.tags.includes("noodles")) badges.push("🍜 Noodle Lover");
+  if (r.cuisine === "Cafe") badges.push("☕ Cafe");
+  return badges.slice(0,2);
+}
+
+function ratingMarkup(r){
+  if (r.rating === null) return `<span class="rating unavailable">⭐ Rating unavailable</span>`;
+  const reviews = r.reviewCount ? ` (${r.reviewCount} reviews)` : "";
+  return `<span>⭐ ${r.rating.toFixed(1)}${reviews}</span>`;
+}
+
+function orderButton(kind, r){
+  if (kind === "grab") {
+    if (r.grabFoodUrl) return `<a class="act-btn grab" href="${r.grabFoodUrl}" target="_blank" rel="noopener noreferrer">🟢 GrabFood</a>`;
+    return `<span class="act-btn disabled" aria-disabled="true">GrabFood unavailable</span>`;
+  }
+  if (r.foodpandaUrl) return `<a class="act-btn panda" href="${r.foodpandaUrl}" target="_blank" rel="noopener noreferrer">🟠 foodpanda</a>`;
+  return `<span class="act-btn disabled" aria-disabled="true">Check foodpanda</span>`;
+}
+
+function renderCards(){
+  const list = getFilteredRestaurants();
+  const total = ALL_RESTAURANTS.length;
+
+  resultCount.textContent = state.budget === "all"
+    ? `${list.length} food spot${list.length===1?"":"s"} found`
+    : `${list.length} food spot${list.length===1?"":"s"} under ${state.budget}`;
+
+  statFoodCount.textContent = total;
+  statBudget.textContent = state.budget === "all" ? "All" : state.budget;
+
+  cardGrid.innerHTML = "";
+
+  if (list.length === 0){
+    cardGrid.innerHTML = `
+      <div class="empty-state">
+        <div class="big">🍃</div>
+        <h3>No food monsters found!</h3>
+        <p>Try increasing your budget or expanding your search radius. Your food radar is quiet…</p>
+      </div>`;
+    updateMapPins([]);
+    return;
+  }
+
+  list.forEach(r => {
+    const isFav = state.favourites.has(r.id);
+    const card = document.createElement("article");
+    card.className = "rcard";
+    card.innerHTML = `
+      <div class="rcard-media">
+        <div class="badge-row">${badgesFor(r).map(b=>`<span class="tag-badge">${b}</span>`).join("")}</div>
+        <span class="dist-badge">${formatDistance(r.distanceKm)}</span>
+        <span class="emoji" aria-hidden="true">${r.emoji}</span>
+      </div>
+      <div class="rcard-body">
+        <h3>${r.name}</h3>
+        <div class="rcard-meta">${r.cuisine} • ${r.category}</div>
+        <div class="rcard-stats">
+          ${ratingMarkup(r)}
+          <span>·</span>
+          <span>${r.budget}</span>
+        </div>
+        <p class="rcard-desc">${r.description}</p>
+        <p class="rcard-addr">📍 ${r.address}</p>
+      </div>
+      <div class="rcard-actions">
+        <a class="act-btn maps" href="${buildGoogleMapsUrl(r)}" target="_blank" rel="noopener noreferrer">🗺 Maps</a>
+        ${orderButton("grab", r)}
+        ${orderButton("panda", r)}
+        <button type="button" class="act-btn fav ${isFav ? "is-fav":""}" data-fav-id="${r.id}" aria-pressed="${isFav}">
+          ${isFav ? "♥ Favourited" : "♡ Favourite"}
+        </button>
+      </div>
+    `;
+    cardGrid.appendChild(card);
+
+    // mark as "discovered" the first time it's rendered/seen
+    if (!state.discovered.has(r.id)) {
+      state.discovered.add(r.id);
+    }
+  });
+
+  saveDiscovered();
+  updateExplorerStrip();
+  updateMapPins(list);
+}
+
+/* ------------------------------------------------------------
+   6. FAVOURITES
+------------------------------------------------------------ */
+cardGrid.addEventListener("click", (e)=>{
+  const btn = e.target.closest("[data-fav-id]");
+  if (!btn) return;
+  const id = Number(btn.dataset.favId);
+  if (state.favourites.has(id)) state.favourites.delete(id);
+  else state.favourites.add(id);
+  saveFavourites();
+  renderCards();
+});
+
+const favToggleBtn = document.getElementById("favToggleBtn");
+favToggleBtn.addEventListener("click", ()=>{
+  state.showFavOnly = !state.showFavOnly;
+  favToggleBtn.classList.toggle("active", state.showFavOnly);
+  favToggleBtn.setAttribute("aria-pressed", String(state.showFavOnly));
+  favToggleBtn.textContent = state.showFavOnly ? "♥ Showing favourites" : "♡ Show favourites";
+  renderCards();
+});
+
+/* ------------------------------------------------------------
+   7. GAMIFICATION — Explorer level / progress
+------------------------------------------------------------ */
+const explorerLevel = document.getElementById("explorerLevel");
+const explorerProgress = document.getElementById("explorerProgress");
+const discoveredCount = document.getElementById("discoveredCount");
+
+function updateExplorerStrip(){
+  const total = ALL_RESTAURANTS.length;
+  const found = state.discovered.size;
+  const pct = total ? Math.round((found/total)*100) : 0;
+  const level = 1 + Math.floor(found/6);
+  explorerLevel.textContent = `Level ${level}`;
+  explorerProgress.style.width = pct + "%";
+  discoveredCount.textContent = found;
+}
+
+/* ------------------------------------------------------------
+   8. MAP — pin layout (lat/lng projected onto SVG stage)
+------------------------------------------------------------ */
+const pinLayer = document.getElementById("pinLayer");
+const mapGrid = document.getElementById("mapGrid");
+
+// draw a light reference grid once
+(function drawGrid(){
+  for (let x=20; x<400; x+=40){
+    mapGrid.innerHTML += `<line class="map-grid-line" x1="${x}" y1="0" x2="${x}" y2="340"></line>`;
+  }
+  for (let y=20; y<340; y+=40){
+    mapGrid.innerHTML += `<line class="map-grid-line" x1="0" y1="${y}" x2="400" y2="${y}"></line>`;
+  }
+})();
+
+// project lat/lng offset from HOME into SVG coordinates, home = (200,170), 2km ring = radius 150
+function project(lat, lng){
+  const dLat = lat - HOME.lat;
+  const dLng = lng - HOME.lng;
+  const kmPerDegLat = 110.57;
+  const kmPerDegLng = 111.32 * Math.cos(HOME.lat * Math.PI/180);
+  const dyKm = dLat * kmPerDegLat;
+  const dxKm = dLng * kmPerDegLng;
+  const pxPerKm = 150 / RADIUS_KM;
+  return { x: 200 + dxKm * pxPerKm, y: 170 - dyKm * pxPerKm };
+}
+
+function updateMapPins(list){
+  pinLayer.innerHTML = "";
+  list.forEach(r => {
+    const {x,y} = project(r.latitude, r.longitude);
+    const g = document.createElementNS("http://www.w3.org/2000/svg","g");
+    g.setAttribute("class","restaurant-pin");
+    g.setAttribute("tabindex","0");
+    g.setAttribute("role","img");
+    g.setAttribute("aria-label", `${r.name}, ${formatDistance(r.distanceKm)}`);
+    g.innerHTML = `
+      <circle cx="${x}" cy="${y}" r="7"></circle>
+      <text x="${x}" y="${y+3}" text-anchor="middle">${r.emoji}</text>
+    `;
+    pinLayer.appendChild(g);
+  });
+}
+
+// zoom controls
+const mapSvg = document.getElementById("mapSvg");
+document.getElementById("zoomIn").addEventListener("click", ()=>{
+  state.zoom = Math.min(2, state.zoom + 0.25);
+  document.querySelector(".map-stage").style.transform = `scale(${state.zoom})`;
+});
+document.getElementById("zoomOut").addEventListener("click", ()=>{
+  state.zoom = Math.max(0.75, state.zoom - 0.25);
+  document.querySelector(".map-stage").style.transform = `scale(${state.zoom})`;
+});
+
+/* ------------------------------------------------------------
+   9. FILTER CONTROL WIRING
+------------------------------------------------------------ */
+document.getElementById("searchInput").addEventListener("input", (e)=>{
+  state.search = e.target.value;
+  renderCards();
+});
+
+document.getElementById("budgetBtns").addEventListener("click",(e)=>{
+  const btn = e.target.closest("button[data-budget]");
+  if(!btn) return;
+  document.querySelectorAll("#budgetBtns button").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  state.budget = btn.dataset.budget;
+  renderCards();
+});
+
+document.getElementById("cuisineSelect").addEventListener("change",(e)=>{ state.cuisine = e.target.value; renderCards(); });
+document.getElementById("distanceSelect").addEventListener("change",(e)=>{ state.distance = Number(e.target.value); renderCards(); });
+document.getElementById("ratingSelect").addEventListener("change",(e)=>{ state.rating = Number(e.target.value); renderCards(); });
+document.getElementById("orderingSelect").addEventListener("change",(e)=>{ state.ordering = e.target.value; renderCards(); });
+document.getElementById("sortSelect").addEventListener("change",(e)=>{ state.sort = e.target.value; renderCards(); });
+
+document.getElementById("chipRow").addEventListener("click",(e)=>{
+  const chip = e.target.closest(".chip");
+  if(!chip) return;
+  const tag = chip.dataset.chipTag;
+  const isActive = chip.classList.contains("active");
+  document.querySelectorAll(".chip").forEach(c=>c.classList.remove("active"));
+  if (isActive){
+    state.activeChip = null;
+  } else {
+    chip.classList.add("active");
+    state.activeChip = tag;
+  }
+  renderCards();
+});
+
+document.getElementById("resetBtn").addEventListener("click", ()=>{
+  state.search = ""; state.budget="all"; state.cuisine="all"; state.distance=2000;
+  state.rating=0; state.ordering="all"; state.sort="nearest"; state.activeChip=null; state.showFavOnly=false;
+
+  document.getElementById("searchInput").value="";
+  document.querySelectorAll("#budgetBtns button").forEach(b=>b.classList.remove("active"));
+  document.querySelector('#budgetBtns button[data-budget="all"]').classList.add("active");
+  document.getElementById("cuisineSelect").value="all";
+  document.getElementById("distanceSelect").value="2000";
+  document.getElementById("ratingSelect").value="0";
+  document.getElementById("orderingSelect").value="all";
+  document.getElementById("sortSelect").value="nearest";
+  document.querySelectorAll(".chip").forEach(c=>c.classList.remove("active"));
+  favToggleBtn.classList.remove("active");
+  favToggleBtn.setAttribute("aria-pressed","false");
+  favToggleBtn.textContent = "♡ Show favourites";
+
+  renderCards();
+});
+
+/* ------------------------------------------------------------
+   10. INITIAL LOAD — brief skeleton, then render
+   (Demo data is synchronous, but this keeps the app ready for
+   a real async API call later without changing the UI flow.)
+------------------------------------------------------------ */
+function renderSkeleton(){
+  cardGrid.innerHTML = Array.from({length:6}).map(()=>`
+    <div class="skeleton-card">
+      <div class="skeleton-media"></div>
+      <div class="skeleton-line" style="width:70%"></div>
+      <div class="skeleton-line" style="width:50%"></div>
+      <div class="skeleton-line" style="width:85%"></div>
+      <div class="skeleton-line" style="width:40%; margin-bottom:14px;"></div>
+    </div>`).join("");
+}
+
+function initApp(){
+  renderSkeleton();
+  try {
+    setTimeout(()=>{
+      renderCards();
+    }, 400);
+  } catch (err){
+    console.error("PokeBite failed to load food data:", err);
+    cardGrid.innerHTML = `
+      <div class="empty-state">
+        <div class="big">📡</div>
+        <h3>Food radar temporarily unavailable.</h3>
+        <p>Something went wrong loading food spots.</p>
+        <button type="button" class="reset-btn" onclick="initApp()">Try again</button>
+      </div>`;
+  }
+}
+
+initApp();
+</script>
+</body>
+</html>
